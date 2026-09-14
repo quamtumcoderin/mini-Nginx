@@ -1,6 +1,7 @@
+use crate::connection::Connection;
 use crate::error::ServerError;
 use tokio::net::TcpListener;
-use tracing::{error, info};
+use tracing::{debug, error, info};
 
 pub struct Server {
     host: String,
@@ -23,8 +24,15 @@ impl Server {
 
         loop {
             match listener.accept().await {
-                Ok((_stream, client_addr)) => {
-                    info!("Accepted connection from {}", client_addr);
+                Ok((stream, client_addr)) => {
+                    debug!("Accepted connection from {}", client_addr);
+
+                    tokio::spawn(async move {
+                        let mut connection = Connection::new(stream);
+                        if let Err(e) = connection.process().await {
+                            error!("Error procesando conexión de {}: {}", client_addr, e);
+                        }
+                    });
                 }
                 Err(e) => {
                     error!("Failed to accept connection: {}", e);
