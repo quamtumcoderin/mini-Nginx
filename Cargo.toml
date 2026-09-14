@@ -1,6 +1,16 @@
 [package]
-name = "mini-Nginx"
+name = "mini-nginx"
 version = "0.1.0"
 edition = "2024"
+description = "Servidor web HTTP de alto rendimiento escrito en Rust"
 
 [dependencies]
+tokio = { version = "1.35", features = ["full"]}
+
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+thiserror = "2.0.20"
+
+serde = { version = "1.0", features = ["derive"] }
+toml = "1.1.6"
