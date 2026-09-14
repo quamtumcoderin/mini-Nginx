@@ -7,6 +7,14 @@ mod router;
 mod server;
 mod static_files;
 
-fn main() {
-    println!("Mini-Nginx: inicialzando estructura base...")
+use crate::server::Server;
+
+#[tokio::main]
+async fn main() -> Result<(), error::ServerError> {
+    logging::init();
+
+    let server = Server::new("127.0.0.1", 8080);
+    server.run().await?;
+
+    Ok(())
 }
